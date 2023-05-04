@@ -210,15 +210,16 @@ func (c cond) PermissionIs() (bool, error) {
 func (c cond) ProgramInstalled() (bool, error) {
 	c.requireArgs("Name")
 	result, err := cond{
-		Cmd: "dpkg -s " + c.Name,
+		Cmd: "rpm -q " + c.Name,
+		// Cmd: "dpkg -s " + c.Name,
 	}.Command()
 
-	// If dpkg fails, use rpm
-	if err != nil {
-		return cond{
-			Cmd: "rpm -q " + c.Name,
-		}.Command()
-	}
+	// // If dpkg fails, use rpm
+	// if err != nil {
+	// 	return cond{
+	// 		Cmd: "rpm -q " + c.Name,
+	// 	}.Command()
+	// }
 
 	return result, err
 }
@@ -226,7 +227,7 @@ func (c cond) ProgramInstalled() (bool, error) {
 func (c cond) ProgramVersion() (bool, error) {
 	c.requireArgs("Name", "Value")
 	return cond{
-		Cmd:   `dpkg -s ` + c.Name + ` | grep Version | cut -d" " -f2`,
+		Cmd:   `rpm -q ` + c.Name,
 		Value: c.Value,
 	}.CommandOutput()
 }
